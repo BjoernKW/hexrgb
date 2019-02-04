@@ -2,16 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>hex - rgb()</title>
+    <title>hex to rgb()</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+		.alert {
+			visibility: hidden;
+		}
+	</style>
 </head>
 <body>
 	<header>
 		<div class="container">
 			<div class="row">
 			    <div class="col-sm-12">
-			    	<h1>hex - rgb()</h1>
-					trjrt
+			    	<h1>hex to rgb()</h1>
 			    </div>
 			</div>
 		</div>
@@ -19,21 +23,55 @@
 	<hr>
 	<div class="container">
 		<div class="row">
+			<div class="col-sm-12">
+				<p>
+					<strong>hex to rgb()</strong> is a simple utility web app that converts hexadecimal CSS colour values to CSS <em>rgb()</em> function calls.
+				</p>
+				<p>
+					Copy & paste a comma-separated list of hexadecimal CSS colour input values into the text area below. Then click the conversion button.
+				</p>
+				<p>
+					Both complete (such as <em>#00ff00</em>) and shorthand values (e.g. <em>#f00</em>) are allowed.
+				</p>
+				<p>
+					<strong>Example input</strong>: #00ff00,#f00
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<p>
+					<button class="btn btn-sm btn-info" id="convert-example-button">
+						Convert example values
+					</button>
+				</p>
+			</div>
+		</div>
+		<div class="row">
 		    <div class="col-sm-12">
 				<form action="javascript:void(0);">
 					<div class="form-group">
-						<label for="hex-values">Hex values</label>
-						<textarea class="form-control" id="hex-values" rows="10">#f00,#00ff00</textarea>
+						<label for="hex-values"><strong>Input</strong>: Hex values</label>
+						<textarea class="form-control" id="hex-values" rows="10"></textarea>
 					</div>
 					<div class="form-group">
-						<label for="rgb-calls">rgb() calls</label>
+						<label for="rgb-calls"><strong>Output</strong>: rgb() calls</label>
 						<textarea class="form-control" id="rgb-calls" rows="10" readonly></textarea>
 					</div>
-					<button class="btn btn-primary" onclick="convertHexValuesToRgbCalls()">
-						Convert hex values to CSS rgb() calls
+					<button class="btn btn-primary" id="convert-button">
+						Convert
+					</button>
+					<button class="btn btn-success" id="copy-button">
+						Copy to clipboard
 					</button>
 				</form>
 		    </div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="alert" role="alert" id="copying-alert"></div>
+			</div>
 		</div>
 	</div>
 	<hr>
@@ -48,43 +86,112 @@
 		</div>
 	</footer>
 	<script>
-		function convertHexValuesToRgbCalls() {
-			const rgbCalls = [];
+		const alertSuccessClass = 'alert-success';
+		const alertDangerClass = 'alert-danger';
+
+		const alertTimeInMilliseconds = 10000;
+
+		const showAlertMessage = function(messageText, classNameToAdd, classNameToRemove) {
+			const alertElement = document.getElementById('copying-alert');
+			
+			alertElement.innerHTML = messageText;
+			alertElement.classList.remove(classNameToRemove);
+			alertElement.classList.add(classNameToAdd);
+
+			alertElement.style.visibility = 'visible';
+			setTimeout(
+				() => {
+					alertElement.style.visibility = 'hidden';
+				},
+				alertTimeInMilliseconds
+			)
+		}
+		
+		const convertHexValuesToRgbCalls = function() {
+			const inputValue = document.getElementById('hex-values').value;
 			const hexValues = document.getElementById('hex-values').value.split(',');
 
-			for(let hexValue of hexValues) {
-				hexValue = hexValue.replace('#','');
-				if (hexValue.length === 3) { // in case of short hex values (e.g. '#f00')
-					const shortHexRedComponent = hexValue.substring(0, 1);
-					const shortHexGreenComponent = hexValue.substring(1, 2);
-					const shortHexBlueComponent = hexValue.substring(2, 3);
+			if (inputValue && inputValue !== '') {
+				const rgbCalls = [];
 
-					hexValue = shortHexRedComponent + shortHexRedComponent
-						+ shortHexGreenComponent + shortHexGreenComponent
-						+ shortHexBlueComponent + shortHexBlueComponent;
+				for(let hexValue of hexValues) {
+					hexValue = hexValue.replace('#','');
+					if (hexValue.length === 3) { // in case of short hex values (e.g. '#f00')
+						const shortHexRedComponent = hexValue.substring(0, 1);
+						const shortHexGreenComponent = hexValue.substring(1, 2);
+						const shortHexBlueComponent = hexValue.substring(2, 3);
+
+						hexValue = shortHexRedComponent + shortHexRedComponent
+							+ shortHexGreenComponent + shortHexGreenComponent
+							+ shortHexBlueComponent + shortHexBlueComponent;
+					}
+
+					const redComponent = hexValue.substring(0, 2);
+					const greenComponent = hexValue.substring(2, 4);
+					const blueComponent = hexValue.substring(4, 6);
+
+					if (
+						!(
+							isNaN(parseInt(redComponent, 16))
+							|| isNaN(parseInt(greenComponent, 16))
+							|| isNaN(parseInt(blueComponent, 16))
+						)
+					) {
+						rgbCall = 'rgb(' + parseInt(redComponent, 16)
+							+ ',' + parseInt(greenComponent, 16)
+							+ ',' + parseInt(blueComponent, 16)
+							+ ');';
+						rgbCalls.push(rgbCall);
+					}
 				}
 
-				const redComponent = hexValue.substring(0, 2);
-				const greenComponent = hexValue.substring(2, 4);
-				const blueComponent = hexValue.substring(4, 6);
+				if (rgbCalls.length > 0) {
+					document.getElementById('rgb-calls').value = rgbCalls.join('\n');
 
-				if (
-					!(
-						isNaN(parseInt(redComponent, 16))
-						|| isNaN(parseInt(greenComponent, 16))
-						|| isNaN(parseInt(blueComponent, 16))
-					)
-				) {
-					rgbCall = 'rgb(' + parseInt(redComponent, 16)
-						+ ',' + parseInt(greenComponent, 16)
-						+ ',' + parseInt(blueComponent, 16)
-						+ ');';
-					rgbCalls.push(rgbCall);
+					showAlertMessage('Conversion succeeded!', alertSuccessClass, alertDangerClass);
+				} else {
+					showAlertMessage('Conversion failed. Output is empty!', alertDangerClass, alertSuccessClass);
 				}
+			} else {
+				showAlertMessage('Input was empty!', alertDangerClass, alertSuccessClass);
 			}
+		};
 
-			document.getElementById('rgb-calls').value = rgbCalls.join('\n');
+		const convertExampleHexValuesToRgbCalls = function() {
+			document.getElementById('hex-values').value = '#00ff00,#f00';
+			convertHexValuesToRgbCalls();
 		}
+
+		const copyRgbCallsToClipboard = function() {
+			var copyTextarea = document.getElementById('rgb-calls');
+			copyTextarea.focus();
+			copyTextarea.select();
+
+			const successMessage = 'The output has been copied to the clipboard!';
+			const errorMessage = "The output couldn't been copied to the clipboard!";
+
+			try {
+				const successful = document.execCommand('copy');
+				if (successful) {
+					showAlertMessage(successMessage, alertSuccessClass, alertDangerClass);
+				} else {
+					showAlertMessage(errorMessage, alertDangerClass, alertSuccessClass);
+				}
+			} catch (error) {
+				showAlertMessage(errorMessage, alertDangerClass, alertSuccessClass);
+				console.error(errorMessage);
+			}
+		}
+
+
+		const convertExampleButton = document.getElementById('convert-example-button');
+		convertExampleButton.addEventListener('click', convertExampleHexValuesToRgbCalls);
+
+		const convertButton = document.getElementById('convert-button');
+		convertButton.addEventListener('click', convertHexValuesToRgbCalls);
+
+		const copyButton = document.getElementById('copy-button');
+		copyButton.addEventListener('click', copyRgbCallsToClipboard);
 	</script>
 </body>
 </html>
