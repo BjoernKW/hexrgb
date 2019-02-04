@@ -1,7 +1,10 @@
-# hexrgb
-Simple utility web app that converts hexadecimal CSS colour values to rgb() function calls.
+# hex to rgb()
 
-## Getting Started
+**hex to rgb()** is a simple utility web app that converts hexadecimal CSS colour values to CSS *rgb()* function calls.
+
+## Using the web app
+
+Go to (https://bjoernkw.github.io/hexrgb/).
 
 ## Built With
 

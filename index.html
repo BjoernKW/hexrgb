@@ -6,10 +6,85 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <div class="col-sm-6">
+	<header>
+		<div class="container">
+			<div class="row">
+			    <div class="col-sm-12">
+			    	<h1>hex - rgb()</h1>
+					trjrt
+			    </div>
+			</div>
+		</div>
+	</header>
+	<hr>
+	<div class="container">
+		<div class="row">
+		    <div class="col-sm-12">
+				<form action="javascript:void(0);">
+					<div class="form-group">
+						<label for="hex-values">Hex values</label>
+						<textarea class="form-control" id="hex-values" rows="10">#f00,#00ff00</textarea>
+					</div>
+					<div class="form-group">
+						<label for="rgb-calls">rgb() calls</label>
+						<textarea class="form-control" id="rgb-calls" rows="10" readonly></textarea>
+					</div>
+					<button class="btn btn-primary" onclick="convertHexValuesToRgbCalls()">
+						Convert hex values to CSS rgb() calls
+					</button>
+				</form>
+		    </div>
+		</div>
+	</div>
+	<hr>
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					&copy; <a href="https://bjoernkw.com" title="Björn Wilmsman">Björn Wilmsmann</a>
+					<script>document.write(new Date().getFullYear());</script>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script>
+		function convertHexValuesToRgbCalls() {
+			const rgbCalls = [];
+			const hexValues = document.getElementById('hex-values').value.split(',');
 
-    </div>
-</div>
+			for(let hexValue of hexValues) {
+				hexValue = hexValue.replace('#','');
+				if (hexValue.length === 3) { // in case of short hex values (e.g. '#f00')
+					const shortHexRedComponent = hexValue.substring(0, 1);
+					const shortHexGreenComponent = hexValue.substring(1, 2);
+					const shortHexBlueComponent = hexValue.substring(2, 3);
+
+					hexValue = shortHexRedComponent + shortHexRedComponent
+						+ shortHexGreenComponent + shortHexGreenComponent
+						+ shortHexBlueComponent + shortHexBlueComponent;
+				}
+
+				const redComponent = hexValue.substring(0, 2);
+				const greenComponent = hexValue.substring(2, 4);
+				const blueComponent = hexValue.substring(4, 6);
+
+				if (
+					!(
+						isNaN(parseInt(redComponent, 16))
+						|| isNaN(parseInt(greenComponent, 16))
+						|| isNaN(parseInt(blueComponent, 16))
+					)
+				) {
+					rgbCall = 'rgb(' + parseInt(redComponent, 16)
+						+ ',' + parseInt(greenComponent, 16)
+						+ ',' + parseInt(blueComponent, 16)
+						+ ');';
+					rgbCalls.push(rgbCall);
+				}
+			}
+
+			document.getElementById('rgb-calls').value = rgbCalls.join('\n');
+		}
+	</script>
 </body>
 </html>
