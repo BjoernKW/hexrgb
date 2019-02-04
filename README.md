@@ -2,9 +2,9 @@
 
 **hex to rgb()** is a simple utility web app that converts hexadecimal CSS colour values to CSS *rgb()* function calls.
 
-## Using the web app
+## Usage
 
-Go to (https://bjoernkw.github.io/hexrgb/).
+Go to https://bjoernkw.github.io/hexrgb/.
 
 ## Built With
 
