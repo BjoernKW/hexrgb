@@ -4,7 +4,7 @@
 
 ## Usage
 
-Go to https://bjoernkw.github.io/hexrgb/.
+Go to https://bjoernkw.github.io/hexrgb/ .
 
 ## Built With
 
