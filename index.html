@@ -115,7 +115,7 @@
 				const rgbCalls = [];
 
 				for(let hexValue of hexValues) {
-					hexValue = hexValue.replace('#','');
+					hexValue = hexValue.replace('#','').replace(/["']/g, '');
 					if (hexValue.length === 3) { // in case of short hex values (e.g. '#f00')
 						const shortHexRedComponent = hexValue.substring(0, 1);
 						const shortHexGreenComponent = hexValue.substring(1, 2);
