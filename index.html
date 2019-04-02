@@ -109,7 +109,9 @@
 		
 		const convertHexValuesToRgbCalls = function() {
 			const inputValue = document.getElementById('hex-values').value;
-			const hexValues = document.getElementById('hex-values').value.split(',');
+			const hexValues = document.getElementById('hex-values').value
+				.replace(/(\r\n|\n|\r)/gm, '')
+				.split(',');
 
 			if (inputValue && inputValue !== '') {
 				const rgbCalls = [];
