@@ -111,7 +111,7 @@
 			const inputValue = document.getElementById('hex-values').value;
 			const hexValues = document.getElementById('hex-values').value
 				.replace(/(\r\n|\n|\r)/gm, '')
-				.split(',\s*');
+				.split(/,\s*/);
 
 			if (inputValue && inputValue !== '') {
 				const rgbCalls = [];
